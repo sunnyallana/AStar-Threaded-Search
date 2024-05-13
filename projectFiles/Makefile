@@ -1,19 +1,16 @@
-CC=g++
-SRC_DIR=src
-BUILD_DIR=build
-BIN_DIR=bin
+all: singleThreaded multiThreaded
 
-SOURCES=$(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS=$(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
-EXECUTABLES=$(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%,$(SOURCES))
+singleThreaded: src/singleThreaded.cpp
+	g++ -o single $^ -lpthread
 
-all: $(EXECUTABLES)
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CC) -c $< -o $@
-
-$(BIN_DIR)/%: $(BUILD_DIR)/%.o
-	$(CC) $< -o $@
+multiThreaded: src/multiThreaded.cpp
+	g++ -o multi $^ -lpthread
 
 clean:
-	rm -f $(BUILD_DIR)/*.o $(EXECUTABLES)
+	rm -f single multi
+
+run_single: singleThreaded
+	./single
+
+run_multi: multiThreaded
+	./multi
